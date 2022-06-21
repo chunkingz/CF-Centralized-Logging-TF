@@ -1,7 +1,5 @@
 
 
-data "aws_caller_identity" "current" {}
-
 # Cloud Trail
 resource "aws_cloudtrail" "service-cloudtrail" {
   name                          = "tf-service-cloudtrail"
@@ -133,15 +131,30 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
   }
 }
 
-#opensearch
+# AWS OpenSearch
+
+data "aws_vpc" "vpc-data" {
+  tags = {
+    Name = var.vpc
+  }
+}
+
+data "aws_subnets" "subnet_data" {
+  vpc_id = data.aws_vpc.vpc-data.id
+
+  tags = {
+    Tier = "private"
+  }
+}
+
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
-resource "aws_security_group" "opensearch" {
+resource "aws_security_group" "opensearch_sg" {
   name        = "${var.vpc}-opensearch-${var.domain}"
   description = "Managed by Terraform"
-  vpc_id      = var.logging_vpc_id
+  vpc_id      = data.aws_vpc.vpc-data.id
 
   ingress {
     from_port = 443
@@ -149,16 +162,16 @@ resource "aws_security_group" "opensearch" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      var.logging_cidr_blocks
+      data.aws_vpc.vpc-data.cidr_block
     ]
   }
 }
 
 resource "aws_iam_service_linked_role" "opensearch_linked_role" {
-  aws_service_name = "opensearchservice.amazonaws.com"
+  aws_service_name = var.opensearch_url
 }
 
-resource "aws_opensearch_domain" "example" {
+resource "aws_opensearch_domain" "opensearch_domain" {
   domain_name    = var.domain
   engine_version = "OpenSearch_1.0"
 
@@ -169,11 +182,11 @@ resource "aws_opensearch_domain" "example" {
 
   vpc_options {
     subnet_ids = [
-      data.aws_subnet_ids.example.ids[0],
-      data.aws_subnet_ids.example.ids[1],
+      data.aws_subnet_ids.subnet_data.ids[0],
+      data.aws_subnet_ids.subnet_data.ids[1],
     ]
 
-    security_group_ids = [aws_security_group.example.id]
+    security_group_ids = [aws_security_group.opensearch_sg.id]
   }
 
   advanced_options = {
@@ -198,7 +211,7 @@ CONFIG
     Domain = "TestDomain"
   }
 
-  depends_on = [aws_iam_service_linked_role.example]
+  depends_on = [aws_iam_service_linked_role.opensearch_linked_role]
 }
 
 #s3 bucket
@@ -294,20 +307,18 @@ resource "aws_iam_role" "cloudwatch_log_destination_role" {
 EOF
 }
 
-  resource "aws_iam_policy" "cloudwatch_log_destination_policy" {
+resource "aws_iam_policy" "cloudwatch_log_destination_policy" {
   name        = "cloudwatch_log_destination_policy"
-  policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
       {
-        "Action": ["logs:*", "kinesis:*"],
-        "Effect": "Allow",
-        "Resource": "*"
+        Action = ["logs:*", "kinesis:*"],
+        Effect = "Allow",
+        Resource = "*"
       }
     ]
-  }
-EOF
+  })
 }
 
 #lambda
@@ -318,3 +329,4 @@ resource "aws_lambda_function" "lambda_processor" {
   handler       = "exports.handler"
   runtime       = "nodejs12.x"
 }
+
