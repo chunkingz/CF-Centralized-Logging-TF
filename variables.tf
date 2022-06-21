@@ -1,15 +1,19 @@
-variable "logging_vpc_id" {
-  default = ""
+
+variable "region" {
+  default = "us-east-1"
   type = string
-  description = "vpc ID where opensearch will be accessible"
+  description = "AWS Region"
 }
 
-variable "logging_cidr_blocks" {
-  default = []
-}
-
-variable "domain" {
+variable "access_key" {
   default = ""
   type = string
-  description = "name of the opensearch domain"
+  description = "AWS Access Key ID"
 }
+
+variable "secret_key" {
+  default = ""
+  type = string
+  description = "AWS Secret Access Key"
+}
+
