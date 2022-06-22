@@ -9,6 +9,7 @@ resource "aws_cloudtrail" "service-cloudtrail" {
 
   # Send Events to CloudWatch Logs
   cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.central.arn}:*"
+  cloud_watch_logs_role_arn = aws_iam_role.cloudwatch_log_destination_role.arn
 }
 
 resource "aws_s3_bucket" "s3-cloudtrail" {
@@ -216,7 +217,7 @@ CONFIG
 
 #s3 bucket
 resource "aws_s3_bucket" "logging" {
-  bucket = "logging-bucket"
+  bucket = "steves-logging-bucket"
 }
 
 resource "aws_s3_bucket_acl" "logging_bucket_acl" {
@@ -226,24 +227,22 @@ resource "aws_s3_bucket_acl" "logging_bucket_acl" {
 
 resource "aws_s3_bucket_policy" "logging_bucket_policy" {
   bucket = aws_s3_bucket.logging.id
-  policy = <<EOF
-{
-  "Id": "logging_bucket_policy",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "bucket_policy_${var.ui_bucket_name}_root",
-      "Action": ["s3:ListBucket"],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.logging.arn}",
-        "${aws_s3_bucket.logging.arn}/*"
-      ]
-      "Principal": {"AWS":"${aws_iam_role.firehose_role.arn}"}
-    }
-  ]
-}
-EOF
+  policy = jsonencode({
+    Id = "logging_bucket_policy",
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid = "bucket_policy_${var.ui_bucket_name}_root",
+        Action = ["s3:ListBucket"],
+        Effect = "Allow",
+        Resource = [
+          "${aws_s3_bucket.logging.arn}",
+          "${aws_s3_bucket.logging.arn}/*"
+        ]
+        Principal = {"AWS":"${aws_iam_role.firehose_role.arn}"}
+      }
+    ]
+  })
 }
 
 #iam roles
