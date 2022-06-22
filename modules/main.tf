@@ -77,7 +77,7 @@ resource "aws_cloudwatch_log_group" "central" {
   name = "Central"
 
   tags = {
-    Name = aws_cloudwatch_log_group.central.name
+    Name = "aws_cloudwatch_log_group"
   }
 }
 
@@ -133,14 +133,14 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
 
 # AWS OpenSearch
 
-data "aws_vpc" "vpc-data" {
+data "aws_vpc" "vpc_data" {
   tags = {
     Name = var.vpc
   }
 }
 
 data "aws_subnets" "subnet_data" {
-  vpc_id = data.aws_vpc.vpc-data.id
+  # vpc_id = data.aws_vpc.vpc_data.id
 
   tags = {
     Tier = "private"
@@ -154,7 +154,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_security_group" "opensearch_sg" {
   name        = "${var.vpc}-opensearch-${var.domain}"
   description = "Managed by Terraform"
-  vpc_id      = data.aws_vpc.vpc-data.id
+  vpc_id      = data.aws_vpc.vpc_data.id
 
   ingress {
     from_port = 443
@@ -162,7 +162,7 @@ resource "aws_security_group" "opensearch_sg" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      data.aws_vpc.vpc-data.cidr_block
+      data.aws_vpc.vpc_data.cidr_block
     ]
   }
 }
@@ -182,8 +182,8 @@ resource "aws_opensearch_domain" "opensearch_domain" {
 
   vpc_options {
     subnet_ids = [
-      data.aws_subnet_ids.subnet_data.ids[0],
-      data.aws_subnet_ids.subnet_data.ids[1],
+      # data.aws_subnets.subnet_data.ids[0],
+      # data.aws_subnets.subnet_data.ids[1],
     ]
 
     security_group_ids = [aws_security_group.opensearch_sg.id]

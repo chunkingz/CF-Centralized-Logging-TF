@@ -11,7 +11,7 @@ variable "logging_cidr_blocks" {
 }
 
 variable "domain" {
-  default = "aws_opensearch_domain"
+  default = "aws-opensearch-domain"
   type = string
   description = "name of the opensearch domain"
 }
