@@ -6,13 +6,13 @@ variable "region" {
 }
 
 variable "access_key" {
-  default     = "AKIAV3EZPDWKM6VSOYTL"
+  default     = "AKIA33TGVN7CWQD2HLPJ"
   type        = string
   description = "AWS Access Key ID"
 }
 
 variable "secret_key" {
-  default     = "nsEy7JIPodz4yQrbU5a6bOGgVmpBDsYTWBGkLsWH"
+  default     = "lFJd6UWf13AV2ROm6waDJ2pHssNBc1Hilv1rTiST"
   type        = string
   description = "AWS Secret Access Key"
 }

@@ -1,4 +1,13 @@
 
+# Create VPC
+resource "aws_vpc" "main" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
+
+  tags = {
+    Name = var.vpc
+  }
+}
 
 # Cloud Trail
 resource "aws_cloudtrail" "service-cloudtrail" {
@@ -135,6 +144,9 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
 # AWS OpenSearch
 
 data "aws_vpc" "vpc_data" {
+  depends_on = [
+    aws_vpc.main
+  ]
   tags = {
     Name = var.vpc
   }

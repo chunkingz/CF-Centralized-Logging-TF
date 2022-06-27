@@ -101,7 +101,10 @@ variable "windows_ami" {
 
 resource "aws_iam_role" "helper_role_d1833_f54" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"lambda.amazonaws.com"'}}]
+    Statement = [{
+      "Action": "sts:AssumeRole", Effect: "Allow", 
+      "Principal": {"Service": "lambda.amazonaws.com"}
+      }]
     Version = "2012-10-17"
   }
 }
@@ -109,7 +112,7 @@ resource "aws_iam_role" "helper_role_d1833_f54" {
 
 resource "aws_iam_policy" "helper_role_policy175990_bad" {
   policy = {
-    Statement = [{'Action': ['"logs:CreateLogStream"', '"logs:PutLogEvents"', '"logs:CreateLogGroup"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":logs:", data.aws_region.current.name, ":", data.aws_region.current.name, ":log-group:*"])', 'join("", ["arn:", data.aws_region.current.name, ":logs:", data.aws_region.current.name, ":", data.aws_region.current.name, ":log-group:*:log-stream:*"])']}, {'Action': ['"ec2:DescribeRegions"', '"logs:PutDestination"', '"logs:DeleteDestination"', '"logs:PutDestinationPolicy"'], 'Effect': '"Allow"', 'Resource': '"*"'}, {'Action': '"iam:CreateServiceLinkedRole"', 'Condition': {'StringLike': {'iam:AWSServiceName': '"es.amazonaws.com"'}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":iam::*:role/aws-service-role/es.amazonaws.com/AWSServiceRoleForAmazonElasticsearchService*"])'}]
+    Statement = [{"Action": ['"logs:CreateLogStream"', '"logs:PutLogEvents"', '"logs:CreateLogGroup"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":logs:", data.aws_region.current.name, ":", data.aws_region.current.name, ":log-group:*"])', 'join("", ["arn:", data.aws_region.current.name, ":logs:", data.aws_region.current.name, ":", data.aws_region.current.name, ":log-group:*:log-stream:*"])']}, {"Action": ['"ec2:DescribeRegions"', '"logs:PutDestination"', '"logs:DeleteDestination"', '"logs:PutDestinationPolicy"'], 'Effect': '"Allow"', 'Resource': '"*"'}, {"Action": '"iam:CreateServiceLinkedRole"', 'Condition': {'StringLike': {'iam:AWSServiceName': '"es.amazonaws.com"'}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":iam::*:role/aws-service-role/es.amazonaws.com/AWSServiceRoleForAmazonElasticsearchService*"])'}]
     Version = "2012-10-17"
   }
   name = "HelperRolePolicy175990BAD"
@@ -142,7 +145,7 @@ resource "aws_lambda_function" "helper_lambda_ac9474_f4" {
 
 resource "aws_iam_role" "helper_providerframeworkon_event_service_role1962_dd43" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"lambda.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"lambda.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
   managed_policy_arns = ['join("", ["arn:", data.aws_region.current.name, ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"])']
@@ -151,7 +154,7 @@ resource "aws_iam_role" "helper_providerframeworkon_event_service_role1962_dd43"
 
 resource "aws_iam_policy" "helper_providerframeworkon_event_service_role_default_policy7_c54367_b" {
   policy = {
-    Statement = [{'Action': '"lambda:InvokeFunction"', 'Effect': '"Allow"', 'Resource': 'aws_lambda_function.helper_lambda_ac9474_f4.arn'}]
+    Statement = [{"Action": '"lambda:InvokeFunction"', 'Effect': '"Allow"', 'Resource': 'aws_lambda_function.helper_lambda_ac9474_f4.arn'}]
     Version = "2012-10-17"
   }
   name = "HelperProviderframeworkonEventServiceRoleDefaultPolicy7C54367B"
@@ -254,7 +257,7 @@ resource "aws_cognito_identity_pool" "es_identity_pool" {
 
 resource "aws_iam_role" "cognito_auth_role7_b7_e27_c0" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRoleWithWebIdentity"', 'Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': 'aws_cognito_identity_pool.es_identity_pool.id'}, 'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': '"authenticated"'}}, 'Effect': '"Allow"', 'Principal': {'Federated': '"cognito-identity.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRoleWithWebIdentity"', 'Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': 'aws_cognito_identity_pool.es_identity_pool.id'}, 'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': '"authenticated"'}}, 'Effect': '"Allow"', 'Principal': {'Federated': '"cognito-identity.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
 }
@@ -270,16 +273,16 @@ resource "aws_cognito_identity_pool_roles_attachment" "identity_pool_role_attach
 
 resource "aws_iam_role" "es_cognito_role0_fb5690_b" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"es.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"es.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
-  force_detach_policies = [{'PolicyDocument': {'Statement': [{'Action': ['"cognito-idp:DescribeUserPool"', '"cognito-idp:CreateUserPoolClient"', '"cognito-idp:DeleteUserPoolClient"', '"cognito-idp:DescribeUserPoolClient"', '"cognito-idp:AdminInitiateAuth"', '"cognito-idp:AdminUserGlobalSignOut"', '"cognito-idp:ListUserPoolClients"', '"cognito-identity:DescribeIdentityPool"', '"cognito-identity:UpdateIdentityPool"', '"cognito-identity:SetIdentityPoolRoles"', '"cognito-identity:GetIdentityPoolRoles"'], 'Effect': '"Allow"', 'Resource': '"*"'}], 'Version': '"2012-10-17"'}, 'PolicyName': '"ESCognitoAccess"'}]
+  force_detach_policies = [{'PolicyDocument': {'Statement': [{"Action": ['"cognito-idp:DescribeUserPool"', '"cognito-idp:CreateUserPoolClient"', '"cognito-idp:DeleteUserPoolClient"', '"cognito-idp:DescribeUserPoolClient"', '"cognito-idp:AdminInitiateAuth"', '"cognito-idp:AdminUserGlobalSignOut"', '"cognito-idp:ListUserPoolClients"', '"cognito-identity:DescribeIdentityPool"', '"cognito-identity:UpdateIdentityPool"', '"cognito-identity:SetIdentityPoolRoles"', '"cognito-identity:GetIdentityPoolRoles"'], 'Effect': '"Allow"', 'Resource': '"*"'}], 'Version': '"2012-10-17"'}, 'PolicyName': '"ESCognitoAccess"'}]
 }
 
 
 resource "aws_iam_policy" "es_cognito_role_default_policy007_a3108" {
   policy = {
-    Statement = [{'Action': '"iam:PassRole"', 'Condition': {'StringLike': {'iam:PassedToService': '"cognito-identity.amazonaws.com"'}}, 'Effect': '"Allow"', 'Resource': 'aws_iam_role.es_cognito_role0_fb5690_b.arn'}]
+    Statement = [{"Action": '"iam:PassRole"', 'Condition': {'StringLike': {'iam:PassedToService': '"cognito-identity.amazonaws.com"'}}, 'Effect': '"Allow"', 'Resource': 'aws_iam_role.es_cognito_role0_fb5690_b.arn'}]
     Version = "2012-10-17"
   }
   name = "ESCognitoRoleDefaultPolicy007A3108"
@@ -289,7 +292,7 @@ resource "aws_iam_policy" "es_cognito_role_default_policy007_a3108" {
 
 resource "aws_iam_role" "firehose_role_aa67_c190" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"firehose.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"firehose.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
 }
@@ -302,7 +305,7 @@ resource "aws_iot_thing_group" "vpc_flow_log_group9559_e1_e7" {
 
 resource "aws_iam_role" "flow_role5_e4_ef2_f1" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"vpc-flow-logs.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"vpc-flow-logs.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
 }
@@ -310,7 +313,7 @@ resource "aws_iam_role" "flow_role5_e4_ef2_f1" {
 
 resource "aws_iam_policy" "flow_role_default_policy_a5122836" {
   policy = {
-    Statement = [{'Action': ['"logs:CreateLogStream"', '"logs:PutLogEvents"', '"logs:DescribeLogStreams"'], 'Effect': '"Allow"', 'Resource': 'aws_iot_thing_group.vpc_flow_log_group9559_e1_e7.arn'}, {'Action': '"iam:PassRole"', 'Effect': '"Allow"', 'Resource': 'aws_iam_role.flow_role5_e4_ef2_f1.arn'}]
+    Statement = [{"Action": ['"logs:CreateLogStream"', '"logs:PutLogEvents"', '"logs:DescribeLogStreams"'], 'Effect': '"Allow"', 'Resource': 'aws_iot_thing_group.vpc_flow_log_group9559_e1_e7.arn'}, {"Action": '"iam:PassRole"', 'Effect': '"Allow"', 'Resource': 'aws_iam_role.flow_role5_e4_ef2_f1.arn'}]
     Version = "2012-10-17"
   }
   name = "flowRoleDefaultPolicyA5122836"
@@ -456,7 +459,7 @@ resource "aws_security_group" "essge420_b5_a1" {
 resource "aws_elasticsearch_domain" "es_domain_b45006_da" {
   access_policies = {
     Version = "2012-10-17"
-    Statement = [{'Effect': '"Allow"', 'Action': ['"es:ESHttpGet"', '"es:ESHttpDelete"', '"es:ESHttpPut"', '"es:ESHttpPost"', '"es:ESHttpHead"', '"es:ESHttpPatch"'], 'Principal': {'AWS': 'aws_iam_role.cognito_auth_role7_b7_e27_c0.arn'}, 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", var.domain_name, "/*"])'}, {'Effect': '"Allow"', 'Action': ['"es:DescribeElasticsearchDomain"', '"es:DescribeElasticsearchDomains"', '"es:DescribeElasticsearchDomainConfig"', '"es:ESHttpPost"', '"es:ESHttpPut"', '"es:HttpGet"'], 'Principal': {'AWS': 'aws_iam_role.firehose_role_aa67_c190.arn'}, 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", var.domain_name, "/*"])'}]
+    Statement = [{'Effect': '"Allow"', "Action": ['"es:ESHttpGet"', '"es:ESHttpDelete"', '"es:ESHttpPut"', '"es:ESHttpPost"', '"es:ESHttpHead"', '"es:ESHttpPatch"'], 'Principal': {'AWS': 'aws_iam_role.cognito_auth_role7_b7_e27_c0.arn'}, 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", var.domain_name, "/*"])'}, {'Effect': '"Allow"', "Action": ['"es:DescribeElasticsearchDomain"', '"es:DescribeElasticsearchDomains"', '"es:DescribeElasticsearchDomainConfig"', '"es:ESHttpPost"', '"es:ESHttpPut"', '"es:HttpGet"'], 'Principal': {'AWS': 'aws_iam_role.firehose_role_aa67_c190.arn'}, 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", var.domain_name, "/*"])'}]
   }
   cognito_options = {
     Enabled = "True"
@@ -503,7 +506,7 @@ resource "aws_elasticsearch_domain" "es_domain_b45006_da" {
 
 resource "aws_iam_policy" "auth_role_policy_ab4_a1_e56" {
   policy = {
-    Statement = [{'Action': ['"es:ESHttpGet"', '"es:ESHttpDelete"', '"es:ESHttpPut"', '"es:ESHttpPost"', '"es:ESHttpHead"', '"es:ESHttpPatch"'], 'Effect': '"Allow"', 'Resource': 'aws_elasticsearch_domain.es_domain_b45006_da.arn'}]
+    Statement = [{"Action": ['"es:ESHttpGet"', '"es:ESHttpDelete"', '"es:ESHttpPut"', '"es:ESHttpPost"', '"es:ESHttpHead"', '"es:ESHttpPatch"'], 'Effect': '"Allow"', 'Resource': 'aws_elasticsearch_domain.es_domain_b45006_da.arn'}]
     Version = "2012-10-17"
   }
   name = "authRolePolicyAB4A1E56"
@@ -518,7 +521,7 @@ resource "aws_sqs_queue" "dlq09_c78_acc" {
 
 resource "aws_iam_role" "cl_transformer_service_role016_cad3_c" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"lambda.amazonaws.com"'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': '"lambda.amazonaws.com"'}}]
     Version = "2012-10-17"
   }
   managed_policy_arns = ['join("", ["arn:", data.aws_region.current.name, ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"])']
@@ -527,7 +530,7 @@ resource "aws_iam_role" "cl_transformer_service_role016_cad3_c" {
 
 resource "aws_iam_policy" "cl_transformer_service_role_default_policy_c34581_d1" {
   policy = {
-    Statement = [{'Action': '"sqs:SendMessage"', 'Effect': '"Allow"', 'Resource': 'aws_sqs_queue.dlq09_c78_acc.arn'}, {'Action': ['"kinesis:DescribeStreamSummary"', '"kinesis:GetRecords"', '"kinesis:GetShardIterator"', '"kinesis:ListShards"', '"kinesis:SubscribeToShard"'], 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}, {'Action': '"kinesis:DescribeStream"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}, {'Action': '"firehose:PutRecordBatch"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_firehose_delivery_stream.cl_firehose.arn'}]
+    Statement = [{"Action": '"sqs:SendMessage"', 'Effect': '"Allow"', 'Resource': 'aws_sqs_queue.dlq09_c78_acc.arn'}, {"Action": ['"kinesis:DescribeStreamSummary"', '"kinesis:GetRecords"', '"kinesis:GetShardIterator"', '"kinesis:ListShards"', '"kinesis:SubscribeToShard"'], 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}, {"Action": '"kinesis:DescribeStream"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}, {"Action": '"firehose:PutRecordBatch"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_firehose_delivery_stream.cl_firehose.arn'}]
     Version = "2012-10-17"
   }
   name = "CLTransformerServiceRoleDefaultPolicyC34581D1"
@@ -650,7 +653,7 @@ resource "aws_s3_bucket" "cl_bucket116_f9_f6_b" {
 resource "aws_s3_bucket_policy" "cl_bucket_policy_f1_df7_d4_f" {
   bucket = aws_s3_bucket.cl_bucket116_f9_f6_b.id
   policy = {
-    Statement = [{'Action': ['"s3:Put*"', '"s3:Get*"'], 'Effect': '"Allow"', 'Principal': {'AWS': 'aws_iam_role.firehose_role_aa67_c190.arn'}, 'Resource': ['aws_s3_bucket.cl_bucket116_f9_f6_b.arn', 'join("", [aws_s3_bucket.cl_bucket116_f9_f6_b.arn, "/*"])']}]
+    Statement = [{"Action": ['"s3:Put*"', '"s3:Get*"'], 'Effect': '"Allow"', 'Principal': {'AWS': 'aws_iam_role.firehose_role_aa67_c190.arn'}, 'Resource': ['aws_s3_bucket.cl_bucket116_f9_f6_b.arn', 'join("", [aws_s3_bucket.cl_bucket116_f9_f6_b.arn, "/*"])']}]
     Version = "2012-10-17"
   }
 }
@@ -676,7 +679,7 @@ resource "aws_cloudwatch_log_stream" "firehose_s3_log_stream_b4_dcf7_b1" {
 
 resource "aws_iam_policy" "firehose_policy3_a3_b2_df8" {
   policy = {
-    Statement = [{'Action': ['"s3:AbortMultipartUpload"', '"s3:GetBucketLocation"', '"s3:GetObject"', '"s3:ListBucket"', '"s3:ListBucketMultipartUploads"', '"s3:PutObject"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id])', 'join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id, "/*"])']}, {'Action': ['"kms:GenerateDataKey"', '"kms:Decrypt"'], 'Condition': {'StringEquals': {'kms:ViaService': 'join("", ["s3.", data.aws_region.current.name, ".amazonaws.com"])'}, 'StringLike': {'kms:EncryptionContext:aws:s3:arn': ['join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id, "/*"])']}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":kms:", data.aws_region.current.name, ":", data.aws_region.current.name, ":key/*"])'}, {'Action': ['"ec2:DescribeVpcs"', '"ec2:DescribeVpcAttribute"', '"ec2:DescribeSubnets"', '"ec2:DescribeSecurityGroups"', '"ec2:DescribeNetworkInterfaces"', '"ec2:CreateNetworkInterface"', '"ec2:CreateNetworkInterfacePermission"', '"ec2:DeleteNetworkInterface"'], 'Effect': '"Allow"', 'Resource': '"*"'}, {'Action': ['"es:DescribeElasticsearchDomain"', '"es:DescribeElasticsearchDomains"', '"es:DescribeElasticsearchDomainConfig"', '"es:ESHttpPost"', '"es:ESHttpPut"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/*"])']}, {'Action': '"es:ESHttpGet"', 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_all/_settings"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_cluster/stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/cwl-kinesis/_mapping/kinesis"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_nodes"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_nodes/*/stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/cwl-kinesis/_stats"])']}, {'Action': ['"logs:PutLogEvents"', '"logs:CreateLogStream"'], 'Effect': '"Allow"', 'Resource': 'aws_iot_thing_group.firehose_log_group1_b45149_b.arn'}, {'Action': '"kms:Decrypt"', 'Condition': {'StringEquals': {'kms:ViaService': 'join("", ["kinesis.", data.aws_region.current.name, ".amazonaws.com"])'}, 'StringLike': {'kms:EncryptionContext:aws:kinesis:arn': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":kms:", data.aws_region.current.name, ":", data.aws_region.current.name, ":key/*"])'}]
+    Statement = [{"Action": ['"s3:AbortMultipartUpload"', '"s3:GetBucketLocation"', '"s3:GetObject"', '"s3:ListBucket"', '"s3:ListBucketMultipartUploads"', '"s3:PutObject"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id])', 'join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id, "/*"])']}, {"Action": ['"kms:GenerateDataKey"', '"kms:Decrypt"'], 'Condition': {'StringEquals': {'kms:ViaService': 'join("", ["s3.", data.aws_region.current.name, ".amazonaws.com"])'}, 'StringLike': {'kms:EncryptionContext:aws:s3:arn': ['join("", ["arn:", data.aws_region.current.name, ":s3:::", aws_s3_bucket.cl_bucket116_f9_f6_b.id, "/*"])']}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":kms:", data.aws_region.current.name, ":", data.aws_region.current.name, ":key/*"])'}, {"Action": ['"ec2:DescribeVpcs"', '"ec2:DescribeVpcAttribute"', '"ec2:DescribeSubnets"', '"ec2:DescribeSecurityGroups"', '"ec2:DescribeNetworkInterfaces"', '"ec2:CreateNetworkInterface"', '"ec2:CreateNetworkInterfacePermission"', '"ec2:DeleteNetworkInterface"'], 'Effect': '"Allow"', 'Resource': '"*"'}, {"Action": ['"es:DescribeElasticsearchDomain"', '"es:DescribeElasticsearchDomains"', '"es:DescribeElasticsearchDomainConfig"', '"es:ESHttpPost"', '"es:ESHttpPut"'], 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/*"])']}, {"Action": '"es:ESHttpGet"', 'Effect': '"Allow"', 'Resource': ['join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_all/_settings"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_cluster/stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/cwl-kinesis/_mapping/kinesis"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_nodes"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_nodes/*/stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/_stats"])', 'join("", ["arn:", data.aws_region.current.name, ":es:", data.aws_region.current.name, ":", data.aws_region.current.name, ":domain/", aws_elasticsearch_domain.es_domain_b45006_da.arn, "/cwl-kinesis/_stats"])']}, {"Action": ['"logs:PutLogEvents"', '"logs:CreateLogStream"'], 'Effect': '"Allow"', 'Resource': 'aws_iot_thing_group.firehose_log_group1_b45149_b.arn'}, {"Action": '"kms:Decrypt"', 'Condition': {'StringEquals': {'kms:ViaService': 'join("", ["kinesis.", data.aws_region.current.name, ".amazonaws.com"])'}, 'StringLike': {'kms:EncryptionContext:aws:kinesis:arn': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}}, 'Effect': '"Allow"', 'Resource': 'join("", ["arn:", data.aws_region.current.name, ":kms:", data.aws_region.current.name, ":", data.aws_region.current.name, ":key/*"])'}]
     Version = "2012-10-17"
   }
   name = "CL-Firehose-Policy"
@@ -721,7 +724,7 @@ resource "aws_kinesis_firehose_delivery_stream" "cl_firehose" {
 
 resource "aws_iam_role" "cw_destination_role20_a8055_f" {
   assume_role_policy = {
-    Statement = [{'Effect': '"Allow"', 'Principal': {'Service': '"logs.amazonaws.com"'}, 'Action': '"sts:AssumeRole"'}]
+    Statement = [{'Effect': '"Allow"', 'Principal': {'Service': '"logs.amazonaws.com"'}, "Action": '"sts:AssumeRole"'}]
     Version = "2012-10-17"
   }
 }
@@ -729,7 +732,7 @@ resource "aws_iam_role" "cw_destination_role20_a8055_f" {
 
 resource "aws_iam_policy" "cw_dest_policy3_dd10_f82" {
   policy = {
-    Statement = [{'Action': '"kinesis:PutRecord"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}]
+    Statement = [{"Action": '"kinesis:PutRecord"', 'Effect': '"Allow"', 'Resource': 'aws_kinesis_stream.cl_data_stream4_dfb5423.arn'}]
     Version = "2012-10-17"
   }
   name = "CWDestPolicy3DD10F82"
@@ -739,7 +742,7 @@ resource "aws_iam_policy" "cw_dest_policy3_dd10_f82" {
 
 resource "aws_iam_policy" "helper_role_policy285_d208_f4" {
   policy = {
-    Statement = [{'Action': '"iam:PassRole"', 'Effect': '"Allow"', 'Resource': 'aws_iam_role.cw_destination_role20_a8055_f.arn'}]
+    Statement = [{"Action": '"iam:PassRole"', 'Effect': '"Allow"', 'Resource': 'aws_iam_role.cw_destination_role20_a8055_f.arn'}]
     Version = "2012-10-17"
   }
   name = "HelperRolePolicy285D208F4"
@@ -766,7 +769,7 @@ resource "aws_security_group" "cl_jumpbox_jumpbox_sgd93_e94_fc" {
 
 resource "aws_iam_role" "cl_jumpbox_jumpbox_ec2_instance_role92_dda704" {
   assume_role_policy = {
-    Statement = [{'Action': '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': 'join("", ["ec2.", data.aws_partition.current.dns_suffix])'}}]
+    Statement = [{"Action": '"sts:AssumeRole"', 'Effect': '"Allow"', 'Principal': {'Service': 'join("", ["ec2.", data.aws_partition.current.dns_suffix])'}}]
     Version = "2012-10-17"
   }
   tags = [{'Key': '"Name"', 'Value': '"CL-PrimaryStack/CL-Jumpbox/JumpboxEC2"'}]
